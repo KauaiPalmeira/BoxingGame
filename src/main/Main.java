@@ -1,4 +1,5 @@
 package main;
+
 import javax.swing.*;
 
 public class Main {
@@ -8,13 +9,11 @@ public class Main {
         window.setResizable(false);
         window.setTitle("Boxing Atari");
 
-        PainelJogo painelJogo = new PainelJogo();
-        window.add(painelJogo);
+        PainelJogo painelJogo = new PainelJogo("C:\\Users\\kauai\\OneDrive\\Área de Trabalho\\AtariBoxingGame\\src\\main\\background.png");
+        window.getContentPane().add(painelJogo);
 
-        window.pack();
-
+        window.setSize(640, 480);  // Define o tamanho da janela diretamente
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-
     }
 }
