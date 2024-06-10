@@ -10,7 +10,7 @@ public class Main {
         window.setResizable(false);
         window.setTitle("Boxing Atari");
 
-        PainelJogo painelJogo = new PainelJogo("C:\\Users\\kauai\\OneDrive\\Área de Trabalho\\AtariBoxingGame\\src\\main\\background.png", nomeJogador);
+        PainelJogo painelJogo = new PainelJogo("C:\\Users\\kauai\\OneDrive\\Área de Trabalho\\AtariBoxingGame\\src\\main\\background.png", nomeJogador, window);
         window.getContentPane().add(painelJogo);
 
         window.setSize(640, 480);

@@ -16,36 +16,58 @@ public class PainelJogo extends JPanel implements KeyListener {
     private int jogadorX;
     private int jogadorY;
     private final int jogadorVelocidade = 5;
+    private int pontuacao = 0;
 
     private final Set<Integer> teclasPressionadas = new HashSet<>();
     private int tempoRestante = 120;
-    private final Timer timer;
+    private Timer timer;
     private final EfeitosSonoros efeitosSonoros;
+    private final Ranking ranking;
+    private final JFrame window;
 
-    //Inicializa o painel do jogo, configura imagem, som e o jogador
-    public PainelJogo(String imagePath, String nomeJogador) {
+    public PainelJogo(String imagePath, String nomeJogador, JFrame window) {
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.backgroundImage = loadImage(imagePath);
         this.personagemJogador = loadPersonagemJogador("C:\\Users\\kauai\\OneDrive\\Área de Trabalho\\AtariBoxingGame\\src\\main\\bonecoJogador.png");
         this.nomeJogador = nomeJogador;
+        this.window = window;
 
         this.jogadorX = 126;
         this.jogadorY = 193;
 
+        this.efeitosSonoros = new EfeitosSonoros();
+        this.efeitosSonoros.tocarMusicaDeFundo();
+
+        this.ranking = new Ranking();
+
+        iniciarTimer();
+
+        this.setFocusable(true);
+        this.addKeyListener(this);
+    }
+
+    private void iniciarTimer() {
         this.timer = new Timer(1000, e -> {
             if (tempoRestante > 0) {
                 tempoRestante--;
                 repaint();
+            } else {
+                timer.stop();
+                ranking.adicionarJogador(nomeJogador, pontuacao);
+                ranking.exibirRanking(window, this::reiniciarFase);
             }
         });
         this.timer.start();
+    }
 
-        this.efeitosSonoros = new EfeitosSonoros();
-        this.efeitosSonoros.tocarMusicaDeFundo();
-
-        this.setFocusable(true);
-        this.addKeyListener(this);
+    private void reiniciarFase() {
+        this.jogadorX = 126;
+        this.jogadorY = 193;
+        this.pontuacao = 0;
+        this.tempoRestante = 120;
+        iniciarTimer();
+        repaint();
     }
 
     private BufferedImage loadImage(String imagePath) {
@@ -64,8 +86,6 @@ public class PainelJogo extends JPanel implements KeyListener {
         return image;
     }
 
-
-    // Método para desenhar os componentes no painel
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -76,7 +96,6 @@ public class PainelJogo extends JPanel implements KeyListener {
             g.drawImage(personagemJogador, jogadorX, jogadorY, null);
         }
 
-        // Borda Header e texto dela
         int borderHeight = (int) (this.getHeight() * 0.07);
         g.setColor(Color.black);
         g.fillRect(0, 0, this.getWidth(), borderHeight);
@@ -86,9 +105,8 @@ public class PainelJogo extends JPanel implements KeyListener {
         g.drawString("Jogador: " + nomeJogador, 10, borderHeight - 10);
         FontMetrics fm = g.getFontMetrics();
         int playerTextWidth = fm.stringWidth("Jogador: " + nomeJogador);
-        g.drawString("Pontuação: ", playerTextWidth + 20, borderHeight - 10);
+        g.drawString("Pontuação: " + pontuacao, playerTextWidth + 20, borderHeight - 10);
 
-        // Desenha o tempo
         String tempo = String.format("%d:%02d", tempoRestante / 60, tempoRestante % 60);
         int tempoTextWidth = fm.stringWidth(tempo);
         g.drawString(tempo, this.getWidth() - tempoTextWidth - 10, borderHeight - 10);
@@ -109,6 +127,7 @@ public class PainelJogo extends JPanel implements KeyListener {
         atualizarPosicao();
     }
 
+
     private void atualizarPosicao() {
         if (teclasPressionadas.contains(KeyEvent.VK_W)) {
             jogadorY = Math.max(0, jogadorY - jogadorVelocidade);
@@ -122,6 +141,7 @@ public class PainelJogo extends JPanel implements KeyListener {
         if (teclasPressionadas.contains(KeyEvent.VK_D)) {
             jogadorX = Math.min(this.getWidth() - personagemJogador.getWidth(), jogadorX + jogadorVelocidade);
         }
+        pontuacao++;
         repaint();
     }
 }
