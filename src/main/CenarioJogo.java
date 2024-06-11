@@ -14,7 +14,7 @@ public class CenarioJogo extends CenarioPadrao {
     public void carregar(String imagePath) {
         backgroundImage = ImageLoader.loadImage(imagePath);
         if (backgroundImage == null) {
-            System.err.println("Erro ao carregar imagem de fundo.");
+            System.err.println("sem imagem de fundo ;(.");
         }
     }
 

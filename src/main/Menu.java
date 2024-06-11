@@ -13,7 +13,8 @@ public class Menu extends Texto {
     private boolean selecionado;
 
     public Menu(String rotulo) {
-        super();
+        // Chama o construtor da superclasse Texto com uma fonte padrão
+        super(new Font("ARCADECLASSIC", Font.PLAIN, 16));
         this.rotulo = rotulo;
         setLargura(120);
         setAltura(20);
@@ -25,7 +26,7 @@ public class Menu extends Texto {
     }
 
     public void centralizar(int larguraPainel, int alturaPainel, Graphics2D g) {
-        FontMetrics fm = g.getFontMetrics(new Font("Tahoma", Font.PLAIN, 16));
+        FontMetrics fm = g.getFontMetrics(getFonte());
         int totalAltura = getAltura() * (opcoes.length + 1);
         int totalWidth = 0;
         for (String opcao : opcoes) {
@@ -45,7 +46,7 @@ public class Menu extends Texto {
             return;
 
         g.setColor(getCor());
-        FontMetrics fm = g.getFontMetrics(new Font("Tahoma", Font.PLAIN, 16));
+        FontMetrics fm = g.getFontMetrics(getFonte());
         int y = getPy();
 
         // Desenha o rótulo centralizado
