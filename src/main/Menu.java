@@ -13,7 +13,6 @@ public class Menu extends Texto {
     private boolean selecionado;
 
     public Menu(String rotulo) {
-        // Chama o construtor da superclasse Texto com uma fonte padrão
         super(new Font("ARCADECLASSIC", Font.PLAIN, 16));
         this.rotulo = rotulo;
         setLargura(120);
@@ -49,11 +48,11 @@ public class Menu extends Texto {
         FontMetrics fm = g.getFontMetrics(getFonte());
         int y = getPy();
 
-        // Desenha o rótulo centralizado
+
         int rotuloWidth = fm.stringWidth(getRotulo());
         super.desenha(g, String.format("%s", getRotulo()), (getPx() + (getLargura() - rotuloWidth) / 2), y);
 
-        // Desenha as opções centralizadas
+
         for (int i = 0; i < opcoes.length; i++) {
             String texto = (i == idx) ? String.format("<%s>", opcoes[i]) : opcoes[i];
             int textoWidth = fm.stringWidth(texto);

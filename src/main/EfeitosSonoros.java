@@ -20,7 +20,7 @@ class EfeitosSonoros {
             clip.open(audioInputStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.log(Level.SEVERE, "Erro ao tocar musica", e);
+            logger.log(Level.SEVERE, "Musica ta dando bug!", e);
         }
     }
 }
