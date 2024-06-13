@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Ranking {
     private final List<Jogador> jogadores;
-    private static final String ARQUIVO_RANKING = "C:\\Users\\kauai\\OneDrive\\Área de Trabalho\\AtariBoxingGame\\src\\main\\TabelaRanking.txt";
+    private static final String ARQUIVO_RANKING = "src/main/ranking/TabelaRanking.txt";
 
     public Ranking() {
         jogadores = new ArrayList<>();

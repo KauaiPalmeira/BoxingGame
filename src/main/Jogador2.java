@@ -9,6 +9,11 @@ public class Jogador2 extends JogadorBase {
     public Jogador2(int x, int y, int velocidade, String spritePath) {
         super(x, y, velocidade, spritePath);
         this.nomeJogador = "Jogador 2";
+        String[] golpeSprites = {
+                "src/main/assets/GolpePreto01.png",
+                "src/main/assets/GolpePreto02.png"
+                                };
+        this.golpePersonagem = new GolpePersonagem(this, golpeSprites);
     }
 
     @Override

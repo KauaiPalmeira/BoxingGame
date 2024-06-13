@@ -1,6 +1,0 @@
-Kauai;200
-TesteBoneco;143
-TESTE;119
-AAA;39
-Vogal;30
-SegundaFeira;55

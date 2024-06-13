@@ -26,6 +26,12 @@ public abstract class JogadorBase {
         }
     }
 
+    protected GolpePersonagem golpePersonagem;
+
+    public GolpePersonagem getGolpePersonagem() {
+        return golpePersonagem;
+    }
+
     private BufferedImage loadSprite(String spritePath) {
         BufferedImage image = ImageLoader.loadImage(spritePath);
         if (image == null) {

@@ -11,10 +11,11 @@ public class PainelJogo extends JPanel implements KeyListener {
 
     private final Jogador1 jogador1;
     private final Jogador2 jogador2;
-    private final String nomeJogador;
+    private final String nomeJogador1;
+    private final String nomeJogador2;
 
     private final Set<Integer> teclasPressionadas = new HashSet<>();
-    private int tempoRestante = 40;
+    private int tempoRestante = 30;
     private Timer timer;
     private final EfeitosSonoros efeitosSonoros;
     private final Ranking ranking;
@@ -37,25 +38,23 @@ public class PainelJogo extends JPanel implements KeyListener {
     private int tempoTextoX = 250;
     private int tempoTextoY = 40;
 
-    public PainelJogo(String imagePath, String nomeJogador, JFrame window) {
+    public PainelJogo(String imagePath, String nomeJogador1, String nomeJogador2, JFrame window) {
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.cenario = new CenarioJogo(640, 480, imagePath);
-        this.jogador1 = new Jogador1(126, 193, 5, "C:\\Users\\kauai\\OneDrive\\Área de Trabalho\\AtariBoxingGame\\src\\main\\bonecoJogador.png");
-        this.jogador2 = new Jogador2(450, 193, 5, "C:\\Users\\kauai\\OneDrive\\Área de Trabalho\\AtariBoxingGame\\src\\main\\bonecoJogador2.png");
+        this.jogador1 = new Jogador1(126, 193, 5, "src/main/assets/bonecoJogador.png");
+        this.jogador2 = new Jogador2(450, 193, 5, "src/main/assets/bonecoJogador2.png");
         this.jogador1.redimensionarSprite(70, 77);
         this.jogador2.redimensionarSprite(62, 77);
-        this.nomeJogador = nomeJogador;
+        this.nomeJogador1 = nomeJogador1;
+        this.nomeJogador2 = nomeJogador2;
         this.window = window;
-
-
 
         this.font = new Font("ARCADECLASSIC", Font.PLAIN, 24);
 
         this.textoJogador1 = new Texto(font);
         this.textoJogador2 = new Texto(font);
         this.textoTempo = new Texto(font);
-
 
         this.efeitosSonoros = new EfeitosSonoros();
 
@@ -69,7 +68,6 @@ public class PainelJogo extends JPanel implements KeyListener {
         this.menu.setSelecionado(true);
     }
 
-
     private void iniciarTimer() {
         this.timer = new Timer(1000, e -> {
             if (tempoRestante > 0) {
@@ -77,7 +75,9 @@ public class PainelJogo extends JPanel implements KeyListener {
                 repaint();
             } else {
                 timer.stop();
-                ranking.adicionarJogador(nomeJogador, jogador1.getPontuacao()); // considerando somente o jogador 1 por enquanto, mudar isso depois
+                efeitosSonoros.tocarTempoAcabou();
+                ranking.adicionarJogador(nomeJogador1, jogador1.getPontuacao());
+                ranking.adicionarJogador(nomeJogador2, jogador2.getPontuacao());
                 ranking.exibirRanking(window, this::reiniciarFase);
             }
         });
@@ -105,10 +105,16 @@ public class PainelJogo extends JPanel implements KeyListener {
             jogador1.desenhar((Graphics2D) g);
             jogador2.desenhar((Graphics2D) g);
 
+            jogador1.getGolpePersonagem().atualizarPosicao();
+            jogador2.getGolpePersonagem().atualizarPosicao();
+
+            jogador1.getGolpePersonagem().desenha((Graphics2D) g);
+            jogador2.getGolpePersonagem().desenha((Graphics2D) g);
+
             g.setColor(Color.white);
 
-            textoJogador1.desenha((Graphics2D) g, nomeJogador + "    SCORE    " + jogador1.getPontuacao(), jogador1TextoX, jogador1TextoY);
-            textoJogador2.desenha((Graphics2D) g, jogador2.getNome() + "    SCORE    " + jogador2.getPontuacao(), jogador2TextoX, jogador2TextoY);
+            textoJogador1.desenha((Graphics2D) g, nomeJogador1 + "    SCORE    " + jogador1.getPontuacao(), jogador1TextoX, jogador1TextoY);
+            textoJogador2.desenha((Graphics2D) g, nomeJogador2 + "    SCORE    " + jogador2.getPontuacao(), jogador2TextoX, jogador2TextoY);
 
             String tempo = String.format("%02d %02d", tempoRestante / 60, tempoRestante % 60);
             textoTempo.desenha((Graphics2D) g, tempo, tempoTextoX, tempoTextoY);
@@ -144,6 +150,26 @@ public class PainelJogo extends JPanel implements KeyListener {
         } else {
             jogador1.atualizarPosicao(teclasPressionadas, this.getWidth(), this.getHeight());
             jogador2.atualizarPosicao(teclasPressionadas, this.getWidth(), this.getHeight());
+
+            if (e.getKeyCode() == KeyEvent.VK_F) {
+                jogador1.getGolpePersonagem().iniciarAnimacao();
+            } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                jogador2.getGolpePersonagem().iniciarAnimacao();
+            }
+            if (jogador1.getGolpePersonagem().checarColisao(jogador2)) {
+                jogador2.x += 40;
+            }
+            if (jogador2.getGolpePersonagem().checarColisao(jogador1)) {
+                jogador1.x -= 40;
+            }
+            if (teclasPressionadas.contains(KeyEvent.VK_W) || teclasPressionadas.contains(KeyEvent.VK_S) ||
+                    teclasPressionadas.contains(KeyEvent.VK_A) || teclasPressionadas.contains(KeyEvent.VK_D)) {
+                jogador1.incrementarPontuacao();
+            }
+            if (teclasPressionadas.contains(KeyEvent.VK_UP) || teclasPressionadas.contains(KeyEvent.VK_DOWN) ||
+                    teclasPressionadas.contains(KeyEvent.VK_LEFT) || teclasPressionadas.contains(KeyEvent.VK_RIGHT)) {
+                jogador2.incrementarPontuacao();
+            }
 
             if (teclasPressionadas.contains(KeyEvent.VK_W) || teclasPressionadas.contains(KeyEvent.VK_S) ||
                     teclasPressionadas.contains(KeyEvent.VK_A) || teclasPressionadas.contains(KeyEvent.VK_D)) {
